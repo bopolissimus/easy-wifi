@@ -1,0 +1,23 @@
+#!/bin/bash
+
+BASED=`dirname $0`
+
+cd $BASED
+
+nmcli connection show --active | grep wifi
+if [ $? = 0 ]
+then
+  exit 0
+fi
+
+LIST=`nmcli device wifi list | tr -s ' ' | cut -f 2 -d ' '  | grep -v -- -- | grep -v SSID | sort | uniq`
+
+for n in $LIST
+do
+  if [ -f $n ]
+  then
+    echo found $n, bringing it up
+    nmcli connection up ifname wlan0 ap $n passwd-file $n
+    exit 0
+  fi
+done

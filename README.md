@@ -4,15 +4,25 @@ Easy automatic wifi connections on headless computers with no logged in users.
 
 This is here just so it's easy for me to get.  I only use it for psk but it shouldn't be hard to use it with other authentication schemes.
 
+# Files
+Scripts go right here.
+
+AP custom configurations and custom shell scripts go in custom.d
+For now, shell scripts just have naming conventions.  Later we may
+change that to have subdirectories under custom.d for overriding
+wifi-up behavior at different parts of the script.
+
 ## Howto:
 
 1. Install network-manager (nmcli, nm-applet, the network manager daemon, etc).
 1. Copy the wifi* scripts somewhere (e.g., /usr/local/bin/easy-wifi).
 1. Make the scripts executable.
-1. Create files that contain the psk for each network you want to connect to,
+1. For each network you want to connect to, create files in config.d that contain the psk for that network:
   * files should be named after the ssid you're connecting to (no extension unless ssid has a period in it)
   * the file should contain one line like this
     802-11-wireless-security.psk-:[thepassphrase with no brackets]
+    ** ^^^ e.g., see config-example although you'd put that in 
+       the config.d directory.
 1. Set up a system to automatically call wifi-up.  I prefer to do that in cron so that if the connection goes down it'll come back up automatically.
 1. wifi-status to see if you're connected
 1. wifi-up to bring it up
@@ -37,4 +47,5 @@ You won't need that if you have a monitor, keyboard and mouse connected to your 
 The wifi-up.sh script will scan the local network for SSIDs and for each one it sees, will look to see if there is a file (in the same directory as wifi-up.sh) that has the same filename as the SSID.  If there is one, it'll use that as the file parameter (containing the psk) and will connect to the wifi accesspoint.
 
 The scripts are very simple-minded.  They assume there is only one wifi device and will connect to the first network that has a corresponding psk file on disk.  If you need something more complicated this might not be for you (or you can add some smarts to it).
+
 

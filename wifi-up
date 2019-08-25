@@ -4,7 +4,7 @@ BASED=`dirname $0`
 
 # set DEV to whatever your wifi device is
 DEV=wlan0
-DEV=wlo1
+#DEV=wlo1
 
 cd $BASED
 
@@ -20,7 +20,7 @@ LIST=`nmcli device wifi list | tr -s ' ' | cut -f 2 -d ' '  | grep -v -- -- | gr
 
 for n in $LIST
 do
-  if [ -f $n ]
+  if [ -f config.d/$n ]
   then
     echo found $n, bringing it up
 
@@ -29,7 +29,7 @@ do
     nmcli connection modify uuid $ID ipv4.route-metric 100
     nmcli connection modify uuid $ID ipv6.route-metric 100
 
-    nmcli connection up ifname $DEV ap $n passwd-file $n
+    nmcli connection up ifname $DEV ap $n passwd-file config.d/$n
     exit 0
   fi
 done

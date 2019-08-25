@@ -8,6 +8,7 @@ DEV=wlo1
 
 cd $BASED
 
+date
 
 nmcli connection show --active | grep wifi
 if [ $? = 0 ]
@@ -22,6 +23,12 @@ do
   if [ -f $n ]
   then
     echo found $n, bringing it up
+
+    ID=`nmcli connection | grep $n | tr -s ' ' | cut -f 2 -d ' ' | head -n 1`
+    echo $ID
+    nmcli connection modify uuid $ID ipv4.route-metric 100
+    nmcli connection modify uuid $ID ipv6.route-metric 100
+
     nmcli connection up ifname $DEV ap $n passwd-file $n
     exit 0
   fi
